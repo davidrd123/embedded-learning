@@ -1,0 +1,17 @@
+# Large binary artifacts — keep in local reference library, not in git
+*.pdf
+
+# Full repo clones — tracked upstream, not here
+Code_and_Notes/pico-sdk/
+Code_and_Notes/embassy/
+
+# SDK headers are small and curated — DO track those
+# rp2350-reference/sdk-headers/ is NOT ignored
+
+# Python bytecode
+__pycache__/
+
+# OS / editor
+.DS_Store
+*.swp
+*~
