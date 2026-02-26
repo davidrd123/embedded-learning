@@ -21,6 +21,9 @@ rp2350-reference/
 ├── split-datasheet.go          ← Go rewrite
 ├── split-datasheet.rs          ← Rust rewrite
 ├── split-datasheet.clj         ← Clojure rewrite
+├── run-split-go.sh             ← uniform wrapper for Go version
+├── run-split-rs.sh             ← uniform wrapper for Rust version
+├── run-split-clj.sh            ← uniform wrapper for Clojure version
 └── sdk-headers/                ← pico-sdk rp2350-specific definitions
     ├── hardware_regs/          ← raw register #defines (auto-generated from chip def)
     ├── hardware_structs/       ← C struct overlays for register access

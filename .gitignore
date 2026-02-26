@@ -1,5 +1,6 @@
 # Large binary artifacts — keep in local reference library, not in git
 *.pdf
+rp2350-reference/datasheet/page-images/
 
 # Full repo clones — tracked upstream, not here
 Code_and_Notes/pico-sdk/

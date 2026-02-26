@@ -53,28 +53,8 @@ Bank 1 contains the QSPI and USB DP/DM pins and supports the following functions
 - UART — Section 12.1, “UART”
 - I2C (two-wire serial interface) — Section 12.2, “I2C”
 The logical structure of an example IO is shown in Figure 41.
-> **Figure 41. Logical**
-structure of a GPIO.
-Each GPIO can be
-controlled by one of a
-number of peripherals,
-or by software control
-registers in the SIO.
-The function select
-(FSEL) selects which
-peripheral output is in
-control of the GPIO’s
-direction and output
-level, and which
-peripheral input can
-see this GPIO’s input
-level. These three
-signals (output level,
-output enable, input
-level) can also be
-inverted or forced high
-or low, using the GPIO
-control registers.
+
+> **Figure 41.** Logical structure of a GPIO. Each GPIO can be controlled by one of a number of peripherals, or by software control registers in the SIO. The function select (FSEL) selects which peripheral output is in control of the GPIO’s direction and output level, and which peripheral input can see this GPIO’s input level. These three signals (output level, output enable, input level) can also be inverted or forced high or low, using the GPIO control registers. See source PDF page 588.
 
 ## 9.2. Changes from RP2040
 
@@ -196,60 +176,46 @@ GPIO   F0   F1         F2          F3         F4        F5    F6     F7     F8  
 ## 9.4. Function select
 
 Table 646. GPIO User
-Function Name                    Description
-Bank function
-descriptions
-SPIx                             Connect one of the internal PL022 SPI peripherals to GPIO.
-UARTx                            Connect one of the internal PL011 UART peripherals to GPIO.
-I2Cx                             Connect one of the internal DW I2C peripherals to GPIO.
-PWMx A/B                         Connect a PWM slice to GPIO. There are twelve PWM slices, each with two output
-channels (A/B). The B pin can also be used as an input, for frequency and duty cycle
-measurement.
-SIO                              Software control of GPIO from the Single-cycle IO (SIO) block. The SIO function (F5)
-must be selected for the processors to drive a GPIO, but the input is always connected,
-so software can check the state of GPIOs at any time.
-PIOx                             Connect one of the programmable IO blocks (PIO) to GPIO. PIO can implement a wide
-variety of interfaces, and has its own internal pin mapping hardware, allowing flexible
-placement of digital interfaces on Bank 0 GPIOs. The PIO function (F6, F7, F8) must be
-selected for PIO to drive a GPIO, but the input is always connected, so the PIOs can
-always see the state of all pins.
-HSTX                             Connect the high-speed transmit peripheral (HSTX) to GPIO.
-CLOCK GPINx                      General purpose clock inputs. Can be routed to a number of internal clock domains on
-RP2350, e.g. to provide a 1Hz clock for the AON Timer, or can be connected to an
-internal frequency counter.
-CLOCK GPOUTx                     General purpose clock outputs. Can drive a number of internal clocks (including PLL
-outputs) onto GPIOs, with optional integer divide.
-TRACECLK, TRACEDATAx             CoreSight execution trace output from Cortex-M33 processors (Arm-only).
-USB OVCUR DET/VBUS               USB power control signals to/from the internal USB controller.
-DET/VBUS EN
-QMI CS1n                         Auxiliary chip select for QSPI bus, to allow execute-in-place from an additional flash or
-PSRAM device.
+
+| Function Name | Description |
+|---|---|
+| SPIx | Connect one of the internal PL022 SPI peripherals to GPIO. |
+| UARTx | Connect one of the internal PL011 UART peripherals to GPIO. |
+| I2Cx | Connect one of the internal DW I2C peripherals to GPIO. |
+| PWMx A/B | Connect a PWM slice to GPIO. There are twelve PWM slices, each with two output channels (A/B). The B pin can also be used as an input, for frequency and duty cycle measurement. |
+| SIO | Software control of GPIO from the Single-cycle IO (SIO) block. The SIO function (F5) must be selected for the processors to drive a GPIO, but the input is always connected, so software can check the state of GPIOs at any time. |
+| PIOx | Connect one of the programmable IO blocks (PIO) to GPIO. PIO can implement a wide variety of interfaces, and has its own internal pin mapping hardware, allowing flexible placement of digital interfaces on Bank 0 GPIOs. The PIO function (F6, F7, F8) must be selected for PIO to drive a GPIO, but the input is always connected, so the PIOs can always see the state of all pins. |
+| HSTX | Connect the high-speed transmit peripheral (HSTX) to GPIO. |
+| CLOCK GPINx | General purpose clock inputs. Can be routed to a number of internal clock domains on RP2350, e.g. to provide a 1Hz clock for the AON Timer, or can be connected to an internal frequency counter. |
+| CLOCK GPOUTx | General purpose clock outputs. Can drive a number of internal clocks (including PLL outputs) onto GPIOs, with optional integer divide. |
+| TRACECLK, TRACEDATAx | CoreSight execution trace output from Cortex-M33 processors (Arm-only). |
+| USB OVCUR DET/VBUS DET/VBUS EN | USB power control signals to/from the internal USB controller. |
+| QMI CS1n | Auxiliary chip select for QSPI bus, to allow execute-in-place from an additional flash or PSRAM device. |
+
 Bank 1 function select operates identically to Bank 0, but its registers are in a different register block, starting with
 USBPHY_DP_CTRL.
-Table 647. GPIO Bank
-Pin           F0            F1      F2             F3            F4    F5     F6      F7   F8     F9    F10    F11
-1 Functions
-USB DP                              UART1 TX       I2C0 SDA            SIO
-USB DM                              UART1 RX       I2C0 SCL            SIO
-QSPI SCK      QMI SCK               UART1 CTS      I2C1 SDA            SIO                                     UART1 TX
-QSPI CSn      QMI CS0n              UART1 RTS      I2C1 SCL            SIO                                     UART1 RX
-QSPI SD0      QMI SD0               UART0 TX       I2C0 SDA            SIO
-QSPI SD1      QMI SD1               UART0 RX       I2C0 SCL            SIO
-QSPI SD2      QMI SD2               UART0 CTS      I2C1 SDA            SIO                                     UART0 TX
-QSPI SD3      QMI SD3               UART0 RTS      I2C1 SCL            SIO                                     UART0 RX
-Table 648. GPIO bank
-Function Name Description
-1 function
-descriptions
-UARTx           Connect one of the internal PL011 UART peripherals to GPIO.
-I2Cx            Connect one of the internal DW I2C peripherals to GPIO.
 
-Function Name Description
-SIO               Software control of GPIO, from the single-cycle IO (SIO) block. The SIO function (F5) must be selected
-for the processors to drive a GPIO, but the input is always connected, so software can check the state
-of GPIOs at any time.
-QMI               QSPI memory interface peripheral, used for execute-in-place from external QSPI flash or PSRAM
-memory devices.
+### Table 647. GPIO Bank 1 Functions
+
+| Pin | F0 | F1 | F2 | F3 | F4 | F5 | F6 | F7 | F8 | F9 | F10 | F11 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| USB DP | - | - | UART1 TX | I2C0 SDA | - | SIO | - | - | - | - | - | - |
+| USB DM | - | - | UART1 RX | I2C0 SCL | - | SIO | - | - | - | - | - | - |
+| QSPI SCK | QMI SCK | - | UART1 CTS | I2C1 SDA | - | SIO | - | - | - | - | - | UART1 TX |
+| QSPI CSn | QMI CS0n | - | UART1 RTS | I2C1 SCL | - | SIO | - | - | - | - | - | UART1 RX |
+| QSPI SD0 | QMI SD0 | - | UART0 TX | I2C0 SDA | - | SIO | - | - | - | - | - | - |
+| QSPI SD1 | QMI SD1 | - | UART0 RX | I2C0 SCL | - | SIO | - | - | - | - | - | - |
+| QSPI SD2 | QMI SD2 | - | UART0 CTS | I2C1 SDA | - | SIO | - | - | - | - | - | UART0 TX |
+| QSPI SD3 | QMI SD3 | - | UART0 RTS | I2C1 SCL | - | SIO | - | - | - | - | - | UART0 RX |
+
+### Table 648. GPIO Bank 1 function descriptions
+
+| Function Name | Description |
+|---|---|
+| UARTx | Connect one of the internal PL011 UART peripherals to GPIO. |
+| I2Cx | Connect one of the internal DW I2C peripherals to GPIO. |
+| SIO | Software control of GPIO, from the single-cycle IO (SIO) block. The SIO function (F5) must be selected for the processors to drive a GPIO, but the input is always connected, so software can check the state of GPIOs at any time. |
+| QMI | QSPI memory interface peripheral, used for execute-in-place from external QSPI flash or PSRAM memory devices. |
 The six QSPI Bank GPIO pins are typically used by the XIP peripheral to communicate with an external flash device.
 However, there are two scenarios where the pins can be used as software-controlled GPIOs:
 - If a SPI or Dual-SPI flash device is used for execute-in-place, then the SD2 and SD3 pins are not used for flash
@@ -300,16 +266,9 @@ circuitry in the following ways:
 - The input buffer can be disabled, to reduce current consumption when the pad is unused, unconnected or
 connected to an analogue signal.
 An example pad is shown in Figure 42.
-> **Figure 42. Diagram of**
-a single IO pad.
-Slew Rate
-GPIO        Output Enable
-Muxing         Output Data                                                   PAD
-Drive Strength
-Input Enable
-Input Data
-Schmitt Trigger
-Pull Up / Pull Down
+
+> **Figure 42.** Diagram of a single IO pad. Shows GPIO muxing driving output enable and output data to the pad, with controls for slew rate, drive strength, input enable, schmitt trigger, and pull up/pull down. See source PDF page 588.
+
 The pad’s Output Enable, Output Data and Input Data ports connect, via the IO mux, to the function controlling the pad.
 All other ports are controlled from the pad control register. You can use this register to disable the pad’s output driver by
 overriding the Output Enable signal from the function controlling the pad. See GPIO0 for an example of a pad control
@@ -766,4 +725,3 @@ Pico Examples: https://github.com/raspberrypi/pico-examples/blob/master/gpio/hel
 8 #include "pico/stdlib.h"
 9 #include "hardware/gpio.h"
 11 #define GPIO_WATCH_PIN 2
-

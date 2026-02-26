@@ -60,9 +60,7 @@ automatically control the serial data flow.
 
 ### 12.1.2. Functional description
 
-> **Figure 63. UART block**
-diagram. Test logic is
-not shown for clarity.
+> **Figure 63.** UART block diagram. Test logic is not shown for clarity. See source PDF page 962.
 
 #### 12.1.2.1. AMBA APB interface
 
@@ -164,8 +162,8 @@ Fractional Baud Rate Register, UARTFBRD. The Baud Rate Divisor has the following
 
 Baud Rate Divisor = UARTCLK/(16×Baud Rate) =                            where          is the integer part and           is the
 fractional part separated by a decimal point as shown in Figure 64.
-> **Figure 64. Baud rate**
-divisor.
+> **Figure 64.** Baud rate divisor. Shows the 16-bit integer and 6-bit fractional part fields. See source PDF page 965.
+
 To calculate the 6-bit number (    ), multiply the fractional part of the required baud rate divisor by 64 (   , where   is the
 width of the UARTFBRD register) and add 0.5 to account for rounding errors:
 The UART generates an internal clock enable signal, Baud16. This is a stream of UARTCLK-wide pulses with an average
@@ -230,16 +228,14 @@ Data transmitted on UARTTXD is received on the UARTRXD input.
 
 #### 12.1.3.3. UART character frame
 
-> **Figure 65. UART**
-character frame.
+> **Figure 65.** UART character frame. Shows UARTTXD signal with start bit, 5-8 data bits (LSB first), optional parity bit, and 1-2 stop bits. See source PDF page 966.
 
 ### 12.1.4. UART hardware flow control
 
 The fully-selectable hardware flow control feature enables you to control the serial data flow with the nUARTRTS output
 and nUARTCTS input signals. Figure 66 shows how to communicate between two devices using hardware flow control:
-> **Figure 66. Hardware**
-flow control between
-two similar devices.
+> **Figure 66.** Hardware flow control between two similar devices. Shows UART1 and UART2 with crossed nUARTRTS/nUARTCTS signals between Rx/Tx FIFOs. See source PDF page 966.
+
 When the RTS flow control is enabled, nUARTRTS is asserted until the receive FIFO is filled up to the programmed
 watermark level. When the CTS flow control is enabled, the transmitter can only transmit data when nUARTCTS is asserted.
 The hardware flow control is selectable using the RTSEn and CTSEn bits in the Control Register, UARTCR. Table 1026 shows
@@ -344,8 +340,8 @@ In addition, the DMAONERR bit in the DMA Control Register, UARTDMACR, supports t
 UARTEINTR. It enables the DMA receive request outputs, UARTRXDMASREQ or UARTRXDMABREQ, to be masked out when the UART
 error interrupt, UARTEINTR, is asserted. The DMA receive request outputs remain inactive until the UARTEINTR is cleared. The
 DMA transmit request outputs are unaffected.
-> **Figure 67. DMA**
-transfer waveforms.
+> **Figure 67.** DMA transfer waveforms. Shows PCLK, DMASREQ, DMABREQ, and DMACLR timing for single and burst transfer requests. See source PDF page 969.
+
 Figure 67 shows the timing diagram for both a single transfer request and a burst transfer request with the appropriate
 DMACLR signal. The signals are all synchronous to PCLK. For the sake of clarity it is assumed that there is no
 synchronization of the request signals in the DMA controller.

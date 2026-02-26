@@ -13,38 +13,8 @@ Source: `rp2350-reference/datasheet/11a-pio-overview-model.pdf`
 
 RP2350 contains 3 identical PIO blocks. Each PIO block has dedicated connections to the bus fabric, GPIO and interrupt
 controller. The diagram for a single PIO block is shown below in Figure 44.
-> **Figure 44. PIO block-**
-level diagram. There              IRQ 0
-IRQ Masking             SM IRQs
-are three PIO blocks,             IRQ 1
-each containing four
-state machines. The
-FIFO IRQs
-four state machines
-simultaneously                                             FIFO
-execute programs                                                                   State Machine 0
-from shared                                                FIFO
-instruction memory.
-FIFO data queues                                           FIFO
-buffer data transferred                                                            State Machine 1
-between PIO and the
-IO Mapping
-FIFO
-system. GPIO mapping
-logic allows each
-FIFO
-state machine to
-State Machine 2
-observe and
-FIFO
-manipulate up to 32
-GPIOs.
-FIFO
-State Machine 3
-FIFO
-Instruction Memory
-Write only            32 Instructions
-4 Read Ports
+> **Figure 44.** PIO block-level diagram. There are three PIO blocks, each containing four state machines. The four state machines simultaneously execute programs from shared instruction memory. FIFO data queues buffer data transferred between PIO and the system. GPIO mapping logic allows each state machine to observe and manipulate up to 32 GPIOs. See source PDF page 876.
+
 The programmable input/output block (PIO) is a versatile hardware interface. It can support a variety of IO standards,
 including:
 - 8080 and 6800 parallel bus
@@ -147,22 +117,7 @@ From this point on, state machines are generally autonomous, and system software
 and control registers, as with other peripherals on RP2350. For more complex interfaces, PIO provides a small but
 flexible set of primitives which allow system software to be more hands-on with state machine control flow.
 
-> **Figure 45. State**
-machine overview.
-Data flows in and out
-through a pair of
-FIFOs. The state
-machine executes a
-program which
-transfers data
-between these FIFOs,
-a set of internal
-registers, and the pins.
-The clock divider can
-reduce the state
-machine’s execution
-speed by a constant
-factor.
+> **Figure 45.** State machine overview. Data flows in and out through a pair of FIFOs. The state machine executes a program which transfers data between these FIFOs, a set of internal registers, and the pins. The clock divider can reduce the state machine’s execution speed by a constant factor. See source PDF page 879.
 
 ### 11.2.1. PIO programs
 
@@ -259,17 +214,10 @@ values such as loop counter variables.
 
 #### 11.2.3.1. Output Shift Register (OSR)
 
-> **Figure 46. Output Shift**
-Register (OSR). Data is
-parcelled out 1…32
-bits at a time, and
-unused data is
-recycled by a
-bidirectional shifter.
-Once empty, the OSR       The Output Shift Register (OSR) holds and shifts output data between the TX FIFO and the pins or other destinations,
-is reloaded from the
+> **Figure 46.** Output Shift Register (OSR). Data is parcelled out 1…32 bits at a time, and unused data is recycled by a bidirectional shifter. Once empty, the OSR is reloaded from the TX FIFO. See source PDF page 881.
+
+The Output Shift Register (OSR) holds and shifts output data between the TX FIFO and the pins or other destinations,
 such as the scratch registers.
-TX FIFO.
 - PULL instructions: remove a 32-bit word from the TX FIFO and place into the OSR.
 - OUT instructions shift data from the OSR to other destinations, 1…32 bits at a time.
 - The OSR fills with zeroes as data is shifted out
@@ -310,15 +258,9 @@ cycle.
 
 #### 11.2.4.1. Input Shift Register (ISR)
 
-> **Figure 47. Input Shift**
-Register (ISR). Data
-enters 1…32 bits at a
-time, and current
-contents is shifted left
-or right to make room.
-Once full, contents is
+> **Figure 47.** Input Shift Register (ISR). Data enters 1…32 bits at a time, and current contents is shifted left or right to make room. Once full, contents is written to the RX FIFO. See source PDF page 882.
+
 - IN instructions shift 1…32 bits at a time into the register.
-written to the RX FIFO.
 - PUSH instructions write the ISR contents to the RX FIFO.
 - The ISR is cleared to all-zeroes when pushed.
 - The state machine will automatically push the ISR on an IN instruction, once some shift threshold is reached, if

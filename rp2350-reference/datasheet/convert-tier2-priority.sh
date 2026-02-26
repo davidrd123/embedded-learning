@@ -14,6 +14,24 @@ CHAPTERS=(
   "12d-adc-temp|1066-1075"
 )
 
+declare -A DISPLAY_TITLES=(
+  ["09a-gpio-overview"]="Chapter 9: GPIO"
+  ["11a-pio-overview-model"]="Chapter 11: PIO"
+  ["11b-pio-instructions"]="Chapter 11: PIO Instructions"
+  ["12a-uart"]="Chapter 12: Peripherals"
+  ["12b-i2c"]="Chapter 12: Peripherals"
+  ["12d-adc-temp"]="Chapter 12: Peripherals"
+)
+
+declare -A START_MARKERS=(
+  ["09a-gpio-overview"]="## Chapter 9. GPIO"
+  ["11a-pio-overview-model"]="## Chapter 11. PIO"
+  ["11b-pio-instructions"]="## 11.4. Instruction Set"
+  ["12a-uart"]="## Chapter 12. Peripherals"
+  ["12b-i2c"]="## 12.2. I2C"
+  ["12d-adc-temp"]="## 12.4. ADC and Temperature Sensor"
+)
+
 for entry in "${CHAPTERS[@]}"; do
   chapter="${entry%%|*}"
   printed_span="${entry#*|}"
@@ -39,7 +57,8 @@ for entry in "${CHAPTERS[@]}"; do
 
   tmp_raw="$(mktemp)"
   tmp_body="$(mktemp)"
-  trap 'rm -f "${tmp_raw}" "${tmp_body}"' EXIT
+  tmp_trimmed="$(mktemp)"
+  trap 'rm -f "${tmp_raw}" "${tmp_body}" "${tmp_trimmed}"' EXIT
 
   pdftotext -layout "${pdf_path}" "${tmp_raw}"
 
@@ -48,6 +67,9 @@ for entry in "${CHAPTERS[@]}"; do
     chapter_heading="Chapter (title not detected)"
   fi
   display_title="$(echo "${chapter_heading}" | sed -E 's/^Chapter ([0-9]+)[.] /Chapter \1: /')"
+  if [[ -n "${DISPLAY_TITLES[${chapter}]:-}" ]]; then
+    display_title="${DISPLAY_TITLES[${chapter}]}"
+  fi
 
   awk '
     function ltrim(s) { sub(/^[ \t]+/, "", s); return s }
@@ -135,6 +157,29 @@ for entry in "${CHAPTERS[@]}"; do
     }
   ' "${tmp_raw}" > "${tmp_body}"
 
+  marker="${START_MARKERS[${chapter}]:-}"
+  if [[ -n "${marker}" ]]; then
+    awk -v marker="${marker}" '
+      BEGIN { started = 0 }
+      {
+        if (!started && index($0, marker) == 1) {
+          started = 1
+        }
+        if (started) print
+      }
+      END {
+        if (!started) {
+          exit 2
+        }
+      }
+    ' "${tmp_body}" > "${tmp_trimmed}" || {
+      echo "Could not find marker '${marker}' in converted output for ${chapter}" >&2
+      exit 1
+    }
+  else
+    cp "${tmp_body}" "${tmp_trimmed}"
+  fi
+
   {
     echo "# RP2350 Datasheet - ${display_title} (Tier 2)"
     echo
@@ -145,10 +190,10 @@ for entry in "${CHAPTERS[@]}"; do
     echo "- Conversion method: \`pdftotext -layout\` + automated markdown cleanup"
     echo "- Loss notes: Diagram content is referenced by captions only; complex table layout may be degraded."
     echo
-    cat "${tmp_body}"
+    cat "${tmp_trimmed}"
   } > "${out_path}"
 
-  rm -f "${tmp_raw}" "${tmp_body}"
+  rm -f "${tmp_raw}" "${tmp_body}" "${tmp_trimmed}"
   trap - EXIT
 
   echo "Wrote ${out_path}"

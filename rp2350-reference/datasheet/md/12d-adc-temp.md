@@ -1,4 +1,4 @@
-# RP2350 Datasheet - Chapter (title not detected) (Tier 2)
+# RP2350 Datasheet - Chapter 12: Peripherals (Tier 2)
 
 Source: `rp2350-reference/datasheet/12d-adc-temp.pdf`
 
@@ -6,39 +6,6 @@ Source: `rp2350-reference/datasheet/12d-adc-temp.pdf`
 - Physical PDF-page span in split chapter: 1-10 (source document physical 1067-1076)
 - Conversion method: `pdftotext -layout` + automated markdown cleanup
 - Loss notes: Diagram content is referenced by captions only; complex table layout may be degraded.
-
-Table 1114.
-Bits        Description                                                                Type   Reset
-SSPPCELLID0 Register
-31:8        Reserved.                                                                  -      -
-7:0         SSPPCELLID0: These bits read back as 0x0D                                  RO     0x0d
-SPI: SSPPCELLID1 Register
-Offset: 0xff4
-Description
-PrimeCell identification registers, SSPPCellID0-3 on page 3-16
-Table 1115.
-Bits        Description                                                                Type   Reset
-SSPPCELLID1 Register
-31:8        Reserved.                                                                  -      -
-7:0         SSPPCELLID1: These bits read back as 0xF0                                  RO     0xf0
-SPI: SSPPCELLID2 Register
-Offset: 0xff8
-Description
-PrimeCell identification registers, SSPPCellID0-3 on page 3-16
-Table 1116.
-Bits        Description                                                                Type   Reset
-SSPPCELLID2 Register
-31:8        Reserved.                                                                  -      -
-7:0         SSPPCELLID2: These bits read back as 0x05                                  RO     0x05
-SPI: SSPPCELLID3 Register
-Offset: 0xffc
-Description
-PrimeCell identification registers, SSPPCellID0-3 on page 3-16
-Table 1117.
-Bits        Description                                                                Type   Reset
-SSPPCELLID3 Register
-31:8        Reserved.                                                                  -      -
-7:0         SSPPCELLID3: These bits read back as 0xB1                                  RO     0xb1
 
 ## 12.4. ADC and Temperature Sensor
 
@@ -55,69 +22,11 @@ RP2350 has an internal analogue-digital converter (ADC) with the following featu
 - Interrupt generation
 - DMA interface (see Section 12.4.3.5)
 Figure 107 shows the arrangement of ADC channels in the QFN-60 package. Figure 108 shows the same for QFN-80.
-> **Figure 107. ADC**
-Connection Diagram
-for QFN-60. This
-package features four
-external ADC inputs (0
-through 3), on Bank 0
-GPIOs 26 through 29.
-The internal
-temperature sensor
-connects to a fifth
-channel (channel 4).
-This is functionally the
-same ADC
-arrangement as
-RP2040, although the
-underlying hardware is
-different, to support
-the additional
-channels on QFN-80.
 
-> **Figure 108. ADC**
-Connection Diagram                                                         ain_sel
-for QFN-80. This
-package features
-eight external ADC                         Analogue input
-inputs (0 through 7),
-on Bank 0 GPIOs 40
-GPIO[40]
-through 47. The                              Digital pad
-internal temperature
-sensor connects to a
-ninth channel (channel                     Analogue input
-8). Like in QFN-60,
-each ADC input shares
-GPIO[41]
-Digital pad
-a package pin with a
-digital Bank 0 GPIO:
-generally the digital
-Analogue input
-functions are disabled                                                       2
-when the ADC is in
-use.                        GPIO[42]
-Digital pad
-Analogue input
-GPIO[43]
-Digital pad
-Analogue input
-4                ADC
-GPIO[44]
-Digital pad
-Analogue input
-GPIO[45]
-Digital pad
-Analogue input
-GPIO[46]
-Digital pad
-Analogue input
-GPIO[47]
-Digital pad
-Temperature
-Sensor
-(on chip)
+> **Figure 107.** ADC Connection Diagram for QFN-60. This package features four external ADC inputs (0 through 3), on Bank 0 GPIOs 26 through 29. The internal temperature sensor connects to a fifth channel (channel 4). This is functionally the same ADC arrangement as RP2040, although the underlying hardware is different, to support the additional channels on QFN-80. See source PDF page 1067.
+
+> **Figure 108.** ADC Connection Diagram for QFN-80. This package features eight external ADC inputs (0 through 7), on Bank 0 GPIOs 40 through 47. The internal temperature sensor connects to a ninth channel (channel 8). Like in QFN-60, each ADC input shares a package pin with a digital Bank 0 GPIO; generally the digital functions are disabled when the ADC is in use. See source PDF page 1068.
+
 When using an ADC input shared with a GPIO pin, always disable the pin’s digital functions by setting IE low and OD high
 in the pin’s pad control register. See Section 9.11.3, “Pad Control - User Bank” for details.
 The maximum ADC input voltage is determined by the digital IO supply voltage (IOVDD), not the ADC supply voltage
@@ -145,55 +54,42 @@ memory
 #### 12.4.2.1. Channel connections
 
 The ADC channels are connected to the following GPIOs in QFN-60
-Table 1118. ADC
-Channel                                                        Connection
-channel connections
-on QFN-60
-0                                                              GPIO[26]
-1                                                              GPIO[27]
-2                                                              GPIO[28]
-3                                                              GPIO[29]
-4                                                              Temperature Sensor
+
+### Table 1118. ADC channel connections on QFN-60
+
+| Channel | Connection |
+|---:|---|
+| 0 | GPIO[26] |
+| 1 | GPIO[27] |
+| 2 | GPIO[28] |
+| 3 | GPIO[29] |
+| 4 | Temperature Sensor |
+
 The ADC channels are connected to the following GPIOs in QFN-80
-Table 1119. ADC
-Channel                                                        Connection
-channel connections
-on QFN-80
-0                                                              GPIO[40]
-1                                                              GPIO[41]
-2                                                              GPIO[42]
-3                                                              GPIO[43]
-4                                                              GPIO[44]
-5                                                              GPIO[45]
-6                                                              GPIO[46]
-7                                                              GPIO[47]
-8                                                              Temperature Sensor
+
+### Table 1119. ADC channel connections on QFN-80
+
+| Channel | Connection |
+|---:|---|
+| 0 | GPIO[40] |
+| 1 | GPIO[41] |
+| 2 | GPIO[42] |
+| 3 | GPIO[43] |
+| 4 | GPIO[44] |
+| 5 | GPIO[45] |
+| 6 | GPIO[46] |
+| 7 | GPIO[47] |
+| 8 | Temperature Sensor |
 
 ### 12.4.3. SAR ADC
 
 The Successive Approximation Register Analogue to Digital Converter (SAR ADC) is a combination of digital controller
 and analogue circuit as shown in Figure 109 and Figure 110 .
 
-> **Figure 109. SAR ADC**
-Block diagram QFN-60
-> **Figure 110. SAR ADC**
-Block diagram QFN-80                    conv_ready
-result_dout
-conv_start                                           SAR controller
-conv_error
-conv_done
-sar_compare_bus
-sar_comp_enable
-sar_comp_result
-sar_sample
-Analogue in                                                    SAR control
-signals
-ain_sel <3:0>
-DAC
-Comparator
-Sample
-and hold
-ain <8:0>
+> **Figure 109.** SAR ADC Block diagram QFN-60. Shows the SAR controller, DAC, comparator, and sample-and-hold circuit with analogue inputs ain_sel<3:0> and control signals (conv_ready, conv_start, conv_done, conv_error). See source PDF page 1070.
+
+> **Figure 110.** SAR ADC Block diagram QFN-80. Same architecture as QFN-60 but with expanded analogue input mux (ain<8:0>). See source PDF page 1070.
+
 The ADC requires a 48 MHz clock (clk_adc), which could come from the USB PLL. Capturing a sample takes 96 clock
 cycles (96 × 1/48 MHz) = 2 μs per sample (500 kS/s). The clock must be set up correctly before enabling the ADC.
 When the ADC block is provided with a clock, and its reset has been removed, writing a 1 to CS.EN will start a short
@@ -228,8 +124,8 @@ Set DIV.INT to a positive value n to trigger the ADC once per n + 1 cycles. The 
 currently in progress, so generally n will be ≥ 96. For example, setting DIV.INT to 47999 runs the ADC at 1 kS/s, if running
 from a 48 MHz clock.
 The pacing timer supports fractional-rate division (first order delta sigma). When setting DIV.FRAC to a non-zero value,
-the ADC starts a new conversion once per                            cycles on average, by changing the sample interval
-between             and          .
+the ADC starts a new conversion once per `1 + INT + FRAC/256` cycles on average, by changing the sample interval
+between `INT + 1` and `INT + 2`.
 
 #### 12.4.3.3. Sampling multiple inputs
 
@@ -317,6 +213,9 @@ Details to follow.
 The temperature sensor measures the Vbe voltage of a biased bipolar diode, connected to the fifth ADC channel (
 AINSEL=4) on QFN-60 or the ninth ADC channel (AINSEL=8) on QFN-80. Typically, Vbe = 0.706 V at 27 °C, with a slope of
 -1.721 mV per degree. Therefore the temperature in °C can be approximated as follows:
+
+`T = 27 - (ADC_voltage - 0.706) / 0.001721`
+
 As the Vbe and the Vbe slope can vary over the temperature range, and from device to device, some user calibration may
 be required if accurate measurements are required.
 The temperature sensor’s bias source must be enabled before use, via CS.TS_EN. This increases current consumption
@@ -330,22 +229,19 @@ internal temperature sensor, consider adding an external reference voltage.
 ### 12.4.7. List of registers
 
 The ADC registers start at a base address of 0x400a0000 (defined as ADC_BASE in SDK).
-Table 1120. List of
-Offset         Name                                   Info
-ADC registers
-0x00           CS                                     ADC Control and Status
-0x04           RESULT                                 Result of most recent ADC conversion
-0x08           FCS                                    FIFO control and status
-0x0c           FIFO                                   Conversion result FIFO
-0x10           DIV                                    Clock divider. If non-zero, CS_START_MANY will start
-conversions
-at regular intervals rather than back-to-back.
-The divider is reset when either of these fields are written.
-Total period is 1 + INT + FRAC / 256
-0x14           INTR                                   Raw Interrupts
-0x18           INTE                                   Interrupt Enable
-0x1c           INTF                                   Interrupt Force
-0x20           INTS                                   Interrupt status after masking & forcing
+*Table 1120. List of ADC registers*
+
+| Offset | Name   | Info |
+|--------|--------|------|
+| 0x00   | CS     | ADC Control and Status |
+| 0x04   | RESULT | Result of most recent ADC conversion |
+| 0x08   | FCS    | FIFO control and status |
+| 0x0c   | FIFO   | Conversion result FIFO |
+| 0x10   | DIV    | Clock divider. If non-zero, CS_START_MANY will start conversions at regular intervals rather than back-to-back. The divider is reset when either of these fields are written. Total period is 1 + INT + FRAC / 256 |
+| 0x14   | INTR   | Raw Interrupts |
+| 0x18   | INTE   | Interrupt Enable |
+| 0x1c   | INTF   | Interrupt Force |
+| 0x20   | INTS   | Interrupt status after masking & forcing |
 
 ADC: CS Register
 Offset: 0x00
@@ -434,4 +330,3 @@ Register
 31:24       Reserved.                                                                         -      -
 23:8        INT: Integer part of clock divisor.                                               RW     0x0000
 7:0         FRAC: Fractional part of clock divisor. First-order delta-sigma.                  RW     0x00
-

@@ -57,9 +57,9 @@ Fallback/reference splitter:
 
 Equivalent rewrites (same logic, different language ergonomics):
 ```bash
-go run split-datasheet.go [source.pdf] [output_dir]
-rustc -O -o /tmp/split-datasheet-rs split-datasheet.rs && /tmp/split-datasheet-rs [source.pdf] [output_dir]
-clojure split-datasheet.clj [source.pdf] [output_dir]
+./run-split-go.sh [source.pdf] [output_dir]
+./run-split-rs.sh [source.pdf] [output_dir]
+./run-split-clj.sh [source.pdf] [output_dir]
 ```
 
 **Recipe A — fast pass (good enough for most chapters):**
@@ -130,12 +130,12 @@ Keep it simple — update this as chapters get converted.
 |---------|--------|--------|--------|-------|
 | `01-introduction` | done | done | — | `datasheet/md/01-introduction.md` |
 | `02-system-bus` | done | — | — | Week 1 priority |
-| `09a-gpio-overview` | done | — | — | Week 1 priority |
-| `11a-pio-overview-model` | done | — | — | Week 1 priority |
-| `11b-pio-instructions` | done | — | — | Week 1 priority |
-| `12a-uart` | done | — | — | Week 1 priority |
-| `12b-i2c` | done | — | — | Week 3 priority |
-| `12d-adc-temp` | done | — | — | Week 3 priority |
+| `09a-gpio-overview` | done | done | — | `datasheet/md/09a-gpio-overview.md` |
+| `11a-pio-overview-model` | done | done | — | `datasheet/md/11a-pio-overview-model.md` |
+| `11b-pio-instructions` | done | done | — | `datasheet/md/11b-pio-instructions.md` |
+| `12a-uart` | done | done | — | `datasheet/md/12a-uart.md` |
+| `12b-i2c` | done | done | — | `datasheet/md/12b-i2c.md` |
+| `12d-adc-temp` | done | done | — | `datasheet/md/12d-adc-temp.md` |
 | `07-resets` | done | — | — | Convert early |
 | `08a-clocks-overview` | done | — | — | Convert early |
 | `03a-processor-SIO` | done | — | — | Convert early |

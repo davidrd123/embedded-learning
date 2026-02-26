@@ -1,4 +1,4 @@
-# RP2350 Datasheet - Chapter (title not detected) (Tier 2)
+# RP2350 Datasheet - Chapter 11: PIO Instructions (Tier 2)
 
 Source: `rp2350-reference/datasheet/11b-pio-instructions.pdf`
 
@@ -7,42 +7,28 @@ Source: `rp2350-reference/datasheet/11b-pio-instructions.pdf`
 - Conversion method: `pdftotext -layout` + automated markdown cleanup
 - Loss notes: Diagram content is referenced by captions only; complex table layout may be degraded.
 
-<delay_value>        Specifies the number of cycles to delay after the instruction completes. The delay_value is
-specified as a value (see Section 11.3.2), and in general is between 0 and 31 inclusive (a 5-bit
-value), however the number of bits is reduced when sideset is enabled via the .side_set (see
-pioasm_side_set) directive. If the <delay_value> is not present, then the instruction has no delay.
-> **NOTE**
-pioasm instruction names, keywords and directives are case insensitive; lower case is used in the Assembly Syntax
-sections below, as this is the style used in the SDK.
-> **NOTE**
-Commas appear in some Assembly Syntax sections below, but are entirely optional, e.g. out pins, 3 may be written
-out pins 3, and jmp x-- label may be written as jmp x--, label. The Assembly Syntax sections below uses the first
-style in each case as this is the style used in the SDK.
-
-### 11.3.7. Pseudo-instructions
-
-pioasm provides aliases for certain instructions, as a convenience:
-nop      Assembles to mov y, y. No side effect, but a useful vehicle for a side-set operation or an extra delay.
-
 ## 11.4. Instruction Set
 
 ### 11.4.1. Summary
 
 PIO instructions are 16 bits long, and use the following encoding:
-Table 980. PIO
-Bit             15     14    13     12     11      10       9    8       7       6         5   4         3        2        1           0
-instruction encoding
-JMP             0      0      0             Delay/side-set                   Condition                         Address
-WAIT            0      0      1             Delay/side-set             Pol        Source                        Index
-IN              0      1      0             Delay/side-set                     Source                          Bit count
-OUT             0      1      1             Delay/side-set                   Destination                       Bit count
-PUSH            1      0      0             Delay/side-set              0        IfF     Blk   0         0        0        0       0
-MOV             1      0      0             Delay/side-set              0        0         0   1        IdxI      0            Index
-PULL            1      0      0             Delay/side-set              1        IfE     Blk   0         0        0        0       0
-MOV             1      0      0             Delay/side-set              1        0         0   1        IdxI      0            Index
-MOV             1      0      1             Delay/side-set                   Destination           Op                   Source
-IRQ             1      1      0             Delay/side-set              0        Clr    Wait   IdxMode                  Index
-SET             1      1      1             Delay/side-set                   Destination                         Data
+
+### Table 980. PIO instruction encoding
+
+| Instruction | Encoding fields (bit 15 -> bit 0) |
+|---|---|
+| JMP | `000 | Delay/side-set | Condition | Address` |
+| WAIT | `001 | Delay/side-set | Pol | Source | Index` |
+| IN | `010 | Delay/side-set | Source | Bit count` |
+| OUT | `011 | Delay/side-set | Destination | Bit count` |
+| PUSH | `100 | Delay/side-set | 0 | IfF | Blk | 0 0 0 0 0` |
+| MOV (from PUSH/PULL opcode space) | `100 | Delay/side-set | 0 | 0 | 0 | 1 | IdxI | 0 | Index` |
+| PULL | `100 | Delay/side-set | 1 | IfE | Blk | 0 0 0 0 0` |
+| MOV (alternate selector) | `100 | Delay/side-set | 1 | 0 | 0 | 1 | IdxI | 0 | Index` |
+| MOV (general) | `101 | Delay/side-set | Destination | Op | Source` |
+| IRQ | `110 | Delay/side-set | 0 | Clr | Wait | IdxMode | Index` |
+| SET | `111 | Delay/side-set | Destination | Data` |
+
 All PIO instructions execute in one clock cycle.
 The function of the 5-bit Delay/side-set field depends on the state machine’s SIDESET_COUNT configuration:
 - Up to 5 LSBs (5 minus SIDESET_COUNT) encode a number of idle cycles inserted between this instruction and the next.
@@ -500,4 +486,3 @@ SET               1      1      1             Delay/side-set                 Des
 
 Write immediate value Data to Destination.
 - Destination:
-
