@@ -7,6 +7,26 @@ Source: `rp2350-reference/datasheet/11b-pio-instructions.pdf`
 - Conversion method: `pdftotext -layout` + automated markdown cleanup
 - Loss notes: Diagram content is referenced by captions only; complex table layout may be degraded.
 
+`<delay_value>` specifies the number of cycles to delay after the instruction completes. The delay_value is specified
+as a value (see Section 11.3.2), and in general is between 0 and 31 inclusive (a 5-bit value), however the number of
+bits is reduced when sideset is enabled via the `.side_set` directive. If the `<delay_value>` is not present, then the
+instruction has no delay.
+
+> **NOTE**
+pioasm instruction names, keywords and directives are case insensitive; lower case is used in the Assembly Syntax
+sections below, as this is the style used in the SDK.
+
+> **NOTE**
+Commas appear in some Assembly Syntax sections below, but are entirely optional, e.g. `out pins, 3` may be written
+`out pins 3`, and `jmp x-- label` may be written as `jmp x--, label`. The Assembly Syntax sections below use the first
+style in each case as this is the style used in the SDK.
+
+### 11.3.7. Pseudo-instructions
+
+pioasm provides aliases for certain instructions, as a convenience:
+
+`nop` assembles to `mov y, y`. No side effect, but a useful vehicle for a side-set operation or an extra delay.
+
 ## 11.4. Instruction Set
 
 ### 11.4.1. Summary

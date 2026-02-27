@@ -160,12 +160,13 @@ a frequency greater than 3.6864MHz to act as UARTCLK, while it is still possible
 The 16-bit integer is written to the Integer Baud Rate Register, UARTIBRD. The 6-bit fractional part is written to the
 Fractional Baud Rate Register, UARTFBRD. The Baud Rate Divisor has the following relationship to UARTCLK:
 
-Baud Rate Divisor = UARTCLK/(16×Baud Rate) =                            where          is the integer part and           is the
+Baud Rate Divisor = UARTCLK/(16×Baud Rate) = BRD_I + BRD_F, where BRD_I is the integer part and BRD_F is the
 fractional part separated by a decimal point as shown in Figure 64.
 > **Figure 64.** Baud rate divisor. Shows the 16-bit integer and 6-bit fractional part fields. See source PDF page 965.
 
-To calculate the 6-bit number (    ), multiply the fractional part of the required baud rate divisor by 64 (   , where   is the
+To calculate the 6-bit number (m), multiply the fractional part of the required baud rate divisor by 64 (2^n, where n is the
 width of the UARTFBRD register) and add 0.5 to account for rounding errors:
+m = integer(BRD_F × 2^n + 0.5)
 The UART generates an internal clock enable signal, Baud16. This is a stream of UARTCLK-wide pulses with an average
 frequency of 16 times the required baud rate. Divide this signal by 16 to give the transmit clock. A low number in the
 baud rate divisor produces a short bit period, and a high number in the baud rate divisor produces a long bit period.
@@ -974,4 +975,3 @@ UART: UARTPCELLID0 Register
 Offset: 0xff0
 Description
 UARTPCellID0 Register
-

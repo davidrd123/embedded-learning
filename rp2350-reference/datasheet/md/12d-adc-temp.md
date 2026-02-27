@@ -103,7 +103,7 @@ over 100 kΩ. DC measurements have no need to buffer.
 
 #### 12.4.3.1. One-shot sample
 
-To select an ADC input, write to to CS.AINSEL:
+To select an ADC input, write to CS.AINSEL:
 - On QFN-60, there are 4 external inputs, with an AINSEL value of 0 → 3 mapping to the ADC input on GPIO26 →
 GPIO29. Set AINSEL to 4 to select the internal temperature sensor.
 - On QFN-80, there are 8 external inputs, with an AINSEL value of 0 → 7 mapping to the ADC input on GPIO40 →
@@ -223,7 +223,7 @@ on ADC_AVDD by approximately 40 μA.
 > **NOTE**
 The on board temperature sensor is very sensitive to errors in reference voltage. At 3.3 V, a value of 891 returned by
 the ADC corresponds to a temperature of 20.1°C. At a reference voltage 1% lower than 3.3 V, the same reading of
-891 correspond to a temperature of 24.3°C: a temperature change of over 4°C. To improve the accuracy of the
+891 corresponds to a temperature of 24.3°C: a temperature change of over 4°C. To improve the accuracy of the
 internal temperature sensor, consider adding an external reference voltage.
 
 ### 12.4.7. List of registers
@@ -247,76 +247,72 @@ ADC: CS Register
 Offset: 0x00
 Description
 ADC Control and Status
-Table 1121. CS
-Bits        Description                                                                      Type   Reset
-Register
-31:25       Reserved.                                                                        -      -
-24:16       RROBIN: Round-robin sampling. 1 bit per channel. Set all bits to 0 to disable.   RW     0x000
-Otherwise, the ADC will cycle through each enabled channel in a round-robin
-fashion.
-The first channel to be sampled will be the one currently indicated by AINSEL.
-AINSEL will be updated after each conversion with the newly-selected channel.
-15:12       AINSEL: Select analog mux input. Updated automatically in round-robin mode. RW          0x0
-This is corrected for the package option so only ADC channels which are
-bonded are available, and in the correct order
-11          Reserved.                                                                        -      -
-10          ERR_STICKY: Some past ADC conversion encountered an error. Write 1 to            WC     0x0
-clear.
-9           ERR: The most recent ADC conversion encountered an error; result is              RO     0x0
-undefined or noisy.
-8           READY: 1 if the ADC is ready to start a new conversion. Implies any previous     RO     0x0
-conversion has completed.
-0 whilst conversion in progress.
-7:4         Reserved.                                                                        -      -
-3           START_MANY: Continuously perform conversions whilst this bit is 1. A new         RW     0x0
-conversion will start immediately after the previous finishes.
-2           START_ONCE: Start a single conversion. Self-clearing. Ignored if start_many is SC       0x0
-asserted.
-1           TS_EN: Power on temperature sensor. 1 - enabled. 0 - disabled.                   RW     0x0
-0           EN: Power on ADC and enable its clock.                                           RW     0x0
-1 - enabled. 0 - disabled.
+
+*Table 1121. CS Register*
+
+| Bits | Description | Type | Reset |
+|---|---|---|---|
+| 31:25 | Reserved. | - | - |
+| 24:16 | RROBIN: Round-robin sampling. 1 bit per channel. Set all bits to 0 to disable. Otherwise, the ADC will cycle through each enabled channel in a round-robin fashion. The first channel to be sampled will be the one currently indicated by AINSEL. AINSEL will be updated after each conversion with the newly-selected channel. | RW | 0x000 |
+| 15:12 | AINSEL: Select analog mux input. Updated automatically in round-robin mode. This is corrected for the package option so only ADC channels which are bonded are available, and in the correct order. | RW | 0x0 |
+| 11 | Reserved. | - | - |
+| 10 | ERR_STICKY: Some past ADC conversion encountered an error. Write 1 to clear. | WC | 0x0 |
+| 9 | ERR: The most recent ADC conversion encountered an error; result is undefined or noisy. | RO | 0x0 |
+| 8 | READY: 1 if the ADC is ready to start a new conversion. Implies any previous conversion has completed. 0 whilst conversion in progress. | RO | 0x0 |
+| 7:4 | Reserved. | - | - |
+| 3 | START_MANY: Continuously perform conversions whilst this bit is 1. A new conversion will start immediately after the previous finishes. | RW | 0x0 |
+| 2 | START_ONCE: Start a single conversion. Self-clearing. Ignored if `start_many` is asserted. | SC | 0x0 |
+| 1 | TS_EN: Power on temperature sensor. 1 - enabled. 0 - disabled. | RW | 0x0 |
+| 0 | EN: Power on ADC and enable its clock. 1 - enabled. 0 - disabled. | RW | 0x0 |
+
 ADC: RESULT Register
 Offset: 0x04
-Table 1122. RESULT
-Bits        Description                                                                      Type   Reset
-Register
-31:12       Reserved.                                                                        -      -
-11:0        Result of most recent ADC conversion                                             RO     0x000
+
+*Table 1122. RESULT Register*
+
+| Bits | Description | Type | Reset |
+|---|---|---|---|
+| 31:12 | Reserved. | - | - |
+| 11:0 | Result of most recent ADC conversion | RO | 0x000 |
+
 ADC: FCS Register
 Offset: 0x08
 Description
 FIFO control and status
 
-Table 1123. FCS
-Bits        Description                                                                       Type   Reset
-Register
-31:28       Reserved.                                                                         -      -
-27:24       THRESH: DREQ/IRQ asserted when level >= threshold                                 RW     0x0
-23:20       Reserved.                                                                         -      -
-19:16       LEVEL: The number of conversion results currently waiting in the FIFO             RO     0x0
-15:12       Reserved.                                                                         -      -
-11          OVER: 1 if the FIFO has been overflowed. Write 1 to clear.                        WC     0x0
-10          UNDER: 1 if the FIFO has been underflowed. Write 1 to clear.                      WC     0x0
-9           FULL                                                                              RO     0x0
-8           EMPTY                                                                             RO     0x0
-7:4         Reserved.                                                                         -      -
-3           DREQ_EN: If 1: assert DMA requests when FIFO contains data                        RW     0x0
-2           ERR: If 1: conversion error bit appears in the FIFO alongside the result          RW     0x0
-1           SHIFT: If 1: FIFO results are right-shifted to be one byte in size. Enables DMA   RW     0x0
-to byte buffers.
-0           EN: If 1: write result to the FIFO after each conversion.                         RW     0x0
+*Table 1123. FCS Register*
+
+| Bits | Description | Type | Reset |
+|---|---|---|---|
+| 31:28 | Reserved. | - | - |
+| 27:24 | THRESH: DREQ/IRQ asserted when level >= threshold | RW | 0x0 |
+| 23:20 | Reserved. | - | - |
+| 19:16 | LEVEL: The number of conversion results currently waiting in the FIFO | RO | 0x0 |
+| 15:12 | Reserved. | - | - |
+| 11 | OVER: 1 if the FIFO has been overflowed. Write 1 to clear. | WC | 0x0 |
+| 10 | UNDER: 1 if the FIFO has been underflowed. Write 1 to clear. | WC | 0x0 |
+| 9 | FULL | RO | 0x0 |
+| 8 | EMPTY | RO | 0x0 |
+| 7:4 | Reserved. | - | - |
+| 3 | DREQ_EN: If 1: assert DMA requests when FIFO contains data | RW | 0x0 |
+| 2 | ERR: If 1: conversion error bit appears in the FIFO alongside the result | RW | 0x0 |
+| 1 | SHIFT: If 1: FIFO results are right-shifted to be one byte in size. Enables DMA to byte buffers. | RW | 0x0 |
+| 0 | EN: If 1: write result to the FIFO after each conversion. | RW | 0x0 |
+
 ADC: FIFO Register
 Offset: 0x0c
 Description
 Conversion result FIFO
-Table 1124. FIFO
-Bits        Description                                                                       Type   Reset
-Register
-31:16       Reserved.                                                                         -      -
-15          ERR: 1 if this particular sample experienced a conversion error. Remains in the RF       -
-same location if the sample is shifted.
-14:12       Reserved.                                                                         -      -
-11:0        VAL                                                                               RF     -
+
+*Table 1124. FIFO Register*
+
+| Bits | Description | Type | Reset |
+|---|---|---|---|
+| 31:16 | Reserved. | - | - |
+| 15 | ERR: 1 if this particular sample experienced a conversion error. Remains in the same location if the sample is shifted. | RF | - |
+| 14:12 | Reserved. | - | - |
+| 11:0 | VAL | RF | - |
+
 ADC: DIV Register
 Offset: 0x10
 Description
@@ -324,9 +320,11 @@ Clock divider. If non-zero, CS_START_MANY will start conversions
 at regular intervals rather than back-to-back.
 The divider is reset when either of these fields are written.
 Total period is 1 + INT + FRAC / 256
-Table 1125. DIV
-Bits        Description                                                                       Type   Reset
-Register
-31:24       Reserved.                                                                         -      -
-23:8        INT: Integer part of clock divisor.                                               RW     0x0000
-7:0         FRAC: Fractional part of clock divisor. First-order delta-sigma.                  RW     0x00
+
+*Table 1125. DIV Register*
+
+| Bits | Description | Type | Reset |
+|---|---|---|---|
+| 31:24 | Reserved. | - | - |
+| 23:8 | INT: Integer part of clock divisor. | RW | 0x0000 |
+| 7:0 | FRAC: Fractional part of clock divisor. First-order delta-sigma. | RW | 0x00 |

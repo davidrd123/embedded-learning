@@ -159,7 +159,7 @@ Side-set is where a state machine drives a small number of GPIOs in addition to 
 instruction it executes. It’s described fully in Section 11.5.1.
 The system has write-only access to the instruction memory, which is used to load programs. The clock divider slows
 the state machine’s execution by a constant factor, represented as a 16.8 fixed-point fractional number. In the following
-example, if a clock division of 2.5 were programmed, the square wave would have a period of                         cycles.
+example, if a clock division of 2.5 were programmed, the square wave would have a period of 4 × 2.5 = 10 cycles.
 This is useful for setting a precise baud rate for a serial interface, such as a UART.
 Pico Examples: https://github.com/raspberrypi/pico-examples/blob/master/pio/squarewave/squarewave.c Lines 34 - 38
 34         // Load the assembled program directly into the PIO's instruction memory.
@@ -544,4 +544,3 @@ is invalid, if an optional number of sideset pins is specified then side <side_s
 present, and if a non-optional number of sideset pins is specified, then side <side_set_value> is
 required. The <side_set_value> must fit within the number of side-set bits specified in the .side_set
 directive.
-
